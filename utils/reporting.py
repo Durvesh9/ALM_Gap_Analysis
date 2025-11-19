@@ -1,51 +1,48 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
-from config import BUCKET_LABELS, OUTPUT_DIR, OUTPUT_FILE_PATH
+from config import OUTPUT_DIR, OUTPUT_FILE_PATH
 
 def setup_output_directory():
-    """Ensures the output directory exists using pathlib."""
+    """Creates the output folder."""
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
-    print(f"INFO: Output directory ensured: {OUTPUT_DIR}")
 
 def plot_gap_profile(gap_df, gap_type):
-    """Generates and saves a stacked bar chart for the gap profile."""
-    
+    """Generates and saves a bar chart for the Static Gap."""
     setup_output_directory()
-    title = f'{gap_type} Gap Profile (Assets minus Liabilities)'
+    
     file_name = Path(OUTPUT_DIR) / f'{gap_type.lower().replace(" ", "_")}_gap.png'
     
     try:
         plt.figure(figsize=(12, 6))
         
-        # Plot the absolute gap
-        gap_df['Static Gap'].plot(kind='bar', 
-                                  color=gap_df['Static Gap'].apply(lambda x: 'g' if x >= 0 else 'r'))
+        # Color positive gaps Green, negative gaps Red
+        bar_colors = gap_df['Static Gap'].apply(lambda x: 'green' if x >= 0 else 'red')
+        gap_df['Static Gap'].plot(kind='bar', color=bar_colors)
         
         plt.axhline(0, color='grey', linewidth=0.8)
-        plt.title(title, fontsize=16)
-        plt.ylabel('Amount (Currency Units)')
-        plt.xlabel('Time Bucket')
+        plt.title(f'{gap_type} Gap Profile', fontsize=16)
+        plt.ylabel('Amount')
         plt.xticks(rotation=45, ha='right')
-        plt.grid(axis='y', linestyle='--', alpha=0.7)
         plt.tight_layout()
+        
         plt.savefig(file_name)
         plt.close()
-        print(f"INFO: Generated plot: {file_name}")
+        print(f"INFO: Chart saved to {file_name}")
+        
     except Exception as e:
-        print(f"ERROR generating {gap_type} plot: {e}")
+        print(f"ERROR plotting chart: {e}")
 
 def export_to_excel(gap_liquidity, gap_repricing, nii_sensitivity):
-    """Exports all analysis results to a multi-sheet Excel file."""
-    
+    """Exports the three analysis dataframes to a single Excel file."""
     setup_output_directory()
     
     try:
         with pd.ExcelWriter(OUTPUT_FILE_PATH, engine='openpyxl') as writer:
-            gap_liquidity.to_excel(writer, sheet_name='Liquidity Gap', index=True)
-            gap_repricing.to_excel(writer, sheet_name='Repricing Gap', index=True)
-            nii_sensitivity.to_excel(writer, sheet_name='NII Sensitivity', index=True)
+            gap_liquidity.to_excel(writer, sheet_name='Liquidity Gap')
+            gap_repricing.to_excel(writer, sheet_name='Repricing Gap')
+            nii_sensitivity.to_excel(writer, sheet_name='NII Sensitivity')
             
-        print(f"INFO: Successfully exported results to Excel: {OUTPUT_FILE_PATH}")
+        print(f"INFO: Report saved to {OUTPUT_FILE_PATH}")
     except Exception as e:
-        print(f"ERROR exporting data to Excel: {e}")
+        print(f"ERROR saving Excel: {e}")

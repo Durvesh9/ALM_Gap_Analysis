@@ -3,8 +3,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 from config import get_db_url, TABLE_NAME, SCHEMA_FILE_PATH, CSV_FILE_PATH
 
-def get_db_engine():
-    """Creates and returns the SQLAlchemy engine."""
+def get_db_engine():                                    #Creates and returns the SQLAlchemy engine
     try:
         engine = create_engine(get_db_url())
         with engine.connect() as connection:
@@ -16,7 +15,7 @@ def get_db_engine():
         return None
 
 def setup_database(engine):
-    """Creates the table structure defined in schema.sql."""
+    #Creates the table structure defined in schema.sql.
     print("--- 1. Database Setup: Creating tables ---")
     if engine is None: return
 

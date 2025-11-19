@@ -6,7 +6,7 @@ DB_CONFIG = {
     'HOST': 'localhost',
     'DATABASE': 'alm_db',
     'USER': 'postgres',
-    'PASSWORD': 'password',  # *** UPDATE THIS ***
+    'PASSWORD': 'durvesh',  # *** UPDATE THIS ***
     'PORT': 5432
 }
 
