@@ -1,12 +1,12 @@
 import datetime
 
-# --- Database Configuration (PostgreSQL using psycopg2 dialect) ---
+# Database Configuration postgres 
 DB_CONFIG = {
     'DIALECT': 'postgresql+psycopg2',
     'HOST': 'localhost',
     'DATABASE': 'alm_db',
     'USER': 'postgres',
-    'PASSWORD': 'durvesh',  # *** UPDATE THIS ***
+    'PASSWORD': 'passw',  
     'PORT': 5432
 }
 
@@ -17,7 +17,7 @@ def get_db_url():
         f"{DB_CONFIG['HOST']}:{DB_CONFIG['PORT']}/{DB_CONFIG['DATABASE']}"
     )
 
-# --- ALM Analysis Configuration ---
+# ALM Analysis Configuration 
 ALM_BUCKETS = {
     'Overnight': 1,
     '1 Week': 7,
@@ -29,7 +29,9 @@ ALM_BUCKETS = {
     '5 Years': 1825,
     'Over 5Y': 10000 
 }
+
 BUCKET_LABELS = list(ALM_BUCKETS.keys())
+
 BUCKET_THRESHOLDS = list(ALM_BUCKETS.values())
 
 ANALYSIS_DATE = datetime.date(2023, 11, 21)
